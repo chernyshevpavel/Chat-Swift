@@ -21,7 +21,6 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - xct_specific_matcher # Prefer specific XCTest matchers over XCTAssertEqual and XCTAssertNotEqual
   - empty_xctest_method # Empty XCTest method should be avoided.
   - yoda_condition # The variable should be placed on the left, the constant on the right of a comparison operator.
-  - trailing_closure # Trailing closure syntax should be used whenever possible.
   - switch_case_on_newline # Cases inside a switch should always be on a newline
   - redundant_type_annotation # Variables should not have redundant type annotation
   - pattern_matching_keywords # Combine multiple pattern matching bindings by moving keywords out of tuples.
@@ -37,6 +36,8 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
   - contains_over_filter_count # Prefer contains over comparing filter(where:).count to 0.
   - closure_spacing # Closure expressions should have a single space inside each brace.
 
+disabled_rules: # rule identifiers to exclude from running
+  - trailing_whitespace
 
 warning_threshold: 15
 
@@ -44,6 +45,7 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Pods
   - R.generated.swift
   - templates
+  - githubsearcher/App/BusinessLogic/Storage/StorageManager.swift
 
 line_length: 200
 

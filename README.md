@@ -13,4 +13,4 @@
 * UICollectionView Diffable Datasource
 * MessageKit
 ## Screenshots
-![Chat-SwiftUI](https://github.com/chernyshevpavel/chat-swiftUI/raw/main/screenshots/1.png)
+![Chat-SwiftUI](https://github.com/chernyshevpavel/chat-swift/raw/main/screenshots/1.png)
