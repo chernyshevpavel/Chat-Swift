@@ -18,7 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = AuthViewController()
+        let sizePreparator = Iphone11SizePreporator()
+        window?.rootViewController = AuthViewController(
+            logoMargin: sizePreparator.prepareHigh(160),
+            labelToBtnMargin: sizePreparator.prepareHigh(20),
+            btnHigh: sizePreparator.prepareHigh(60),
+            stackViewSpacing: sizePreparator.prepareHigh(40),
+            leftAndRightMargin: sizePreparator.prepareWidth(40))
         window?.makeKeyAndVisible()
     }
 

@@ -18,21 +18,85 @@ class AuthViewController: UIViewController {
     let googleButton = UIButton(
         title: "Google",
         titleColor: .black,
-        backgroundCollor: .white,
+        backgroundColor: .white,
         isShadow: true)
     let emailButton = UIButton(
         title: "Email",
         titleColor: .white,
-        backgroundCollor: .buttonBlack())
+        backgroundColor: .buttonBlack())
     let loginButton = UIButton(
         title: "Login",
         titleColor: .buttonRed(),
-        backgroundCollor: .white,
+        backgroundColor: .white,
         isShadow: true)
+    
+    private let logoMargin: CGFloat
+    private let labelToBtnMargin: CGFloat
+    private let btnHigh: CGFloat
+    private let stackViewSpacing: CGFloat
+    private let leftAndRightMargin: CGFloat
+    
+    init(
+        logoMargin: CGFloat,
+        labelToBtnMargin: CGFloat,
+        btnHigh: CGFloat,
+        stackViewSpacing: CGFloat,
+        leftAndRightMargin: CGFloat
+    ) {
+        self.logoMargin = logoMargin
+        self.labelToBtnMargin = labelToBtnMargin
+        self.btnHigh = btnHigh
+        self.stackViewSpacing = stackViewSpacing
+        self.leftAndRightMargin = leftAndRightMargin
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available (*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .blue
+        view.backgroundColor = .white
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        let googleView = ButtonFormView(
+            label: gooleLabel,
+            button: googleButton,
+            labelToBtnMargin: labelToBtnMargin,
+            btnHigh: btnHigh)
+        let emailView = ButtonFormView(
+            label: emailLabel,
+            button: emailButton,
+            labelToBtnMargin: labelToBtnMargin,
+            btnHigh: btnHigh)
+        let loginView = ButtonFormView(
+            label: alreadyOnboardLabel,
+            button: loginButton,
+            labelToBtnMargin: labelToBtnMargin,
+            btnHigh: btnHigh)
+        
+        let stackView = UIStackView(arrangedSubviews: [googleView, emailView, loginView], axis: .vertical, spacing: stackViewSpacing)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(logoImageView)
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            logoImageView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: logoMargin),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(lessThanOrEqualTo: logoImageView.bottomAnchor, constant: logoMargin),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leftAndRightMargin),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin)
+        ])
     }
 }
 
@@ -45,8 +109,17 @@ struct AuthViewControllerProvider: PreviewProvider {
     }
     
     struct ContainerView: UIViewControllerRepresentable {
-        let viewController = AuthViewController()
-         
+        let sizePreparator = Iphone11SizePreporator()
+        let viewController: AuthViewController
+        init() {
+            self.viewController = AuthViewController(
+                logoMargin: sizePreparator.prepareHigh(160),
+                labelToBtnMargin: sizePreparator.prepareHigh(20),
+                btnHigh: sizePreparator.prepareHigh(60),
+                stackViewSpacing: sizePreparator.prepareHigh(40),
+                leftAndRightMargin: sizePreparator.prepareWidth(40))
+        }
+        
         func makeUIViewController(context: UIViewControllerRepresentableContext<AuthViewControllerProvider.ContainerView>) -> AuthViewController {
             viewController
         }
