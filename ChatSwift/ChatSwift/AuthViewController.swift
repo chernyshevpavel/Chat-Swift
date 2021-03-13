@@ -37,17 +37,18 @@ class AuthViewController: UIViewController {
     private let leftAndRightMargin: CGFloat
     
     init(
-        logoMargin: CGFloat,
-        labelToBtnMargin: CGFloat,
-        btnHigh: CGFloat,
-        stackViewSpacing: CGFloat,
-        leftAndRightMargin: CGFloat
+        sizePreporator: SizePreporator,
+        logoMargin: CGFloat = 160,
+        labelToBtnMargin: CGFloat = 20,
+        btnHigh: CGFloat = 60,
+        stackViewSpacing: CGFloat = 40,
+        leftAndRightMargin: CGFloat = 40
     ) {
-        self.logoMargin = logoMargin
-        self.labelToBtnMargin = labelToBtnMargin
-        self.btnHigh = btnHigh
-        self.stackViewSpacing = stackViewSpacing
-        self.leftAndRightMargin = leftAndRightMargin
+        self.logoMargin = sizePreporator.prepareHigh(logoMargin)
+        self.labelToBtnMargin = sizePreporator.prepareHigh(labelToBtnMargin)
+        self.btnHigh = sizePreporator.prepareHigh(btnHigh)
+        self.stackViewSpacing = sizePreporator.prepareHigh(stackViewSpacing)
+        self.leftAndRightMargin = sizePreporator.prepareWidth(leftAndRightMargin)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -61,7 +62,11 @@ class AuthViewController: UIViewController {
         view.backgroundColor = .white
         setupConstraints()
     }
-    
+}
+
+// MARK: - Set constraints
+
+extension AuthViewController {
     private func setupConstraints() {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -109,15 +114,9 @@ struct AuthViewControllerProvider: PreviewProvider {
     }
     
     struct ContainerView: UIViewControllerRepresentable {
-        let sizePreparator = Iphone11SizePreporator()
         let viewController: AuthViewController
         init() {
-            self.viewController = AuthViewController(
-                logoMargin: sizePreparator.prepareHigh(160),
-                labelToBtnMargin: sizePreparator.prepareHigh(20),
-                btnHigh: sizePreparator.prepareHigh(60),
-                stackViewSpacing: sizePreparator.prepareHigh(40),
-                leftAndRightMargin: sizePreparator.prepareWidth(40))
+            self.viewController = AuthViewController(sizePreporator: Iphone11SizePreporator())
         }
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<AuthViewControllerProvider.ContainerView>) -> AuthViewController {
