@@ -34,6 +34,7 @@ class AuthViewController: UIViewController {
     private let labelToBtnMargin: CGFloat
     private let btnHigh: CGFloat
     private let stackViewSpacing: CGFloat
+    private let topAndBottomMargin: CGFloat
     private let leftAndRightMargin: CGFloat
     
     init(
@@ -42,13 +43,14 @@ class AuthViewController: UIViewController {
         labelToBtnMargin: CGFloat = 20,
         btnHigh: CGFloat = 60,
         stackViewSpacing: CGFloat = 40,
-        leftAndRightMargin: CGFloat = 40
+        aroundMargin: CGFloat = 40
     ) {
         self.logoMargin = sizePreporator.prepareHigh(logoMargin)
         self.labelToBtnMargin = sizePreporator.prepareHigh(labelToBtnMargin)
         self.btnHigh = sizePreporator.prepareHigh(btnHigh)
         self.stackViewSpacing = sizePreporator.prepareHigh(stackViewSpacing)
-        self.leftAndRightMargin = sizePreporator.prepareWidth(leftAndRightMargin)
+        self.topAndBottomMargin = sizePreporator.prepareHigh(aroundMargin)
+        self.leftAndRightMargin = sizePreporator.prepareWidth(aroundMargin)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -93,6 +95,7 @@ extension AuthViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
+            logoImageView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: topAndBottomMargin),
             logoImageView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: logoMargin),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
@@ -100,7 +103,8 @@ extension AuthViewController {
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: logoImageView.bottomAnchor, constant: logoMargin),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leftAndRightMargin),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin)
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -topAndBottomMargin)
         ])
     }
 }

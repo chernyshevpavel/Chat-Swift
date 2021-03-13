@@ -28,14 +28,15 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    let titleTopMargin: CGFloat
-    let titleBottomMargin: CGFloat
-    let labelToBtnMargin: CGFloat
-    let btnHigh: CGFloat
-    let stackFieldsSpacing: CGFloat
-    let signUpBtnTopMargin: CGFloat
-    let aroundMargin: CGFloat
-    let loginStackSpacing: CGFloat
+    private let titleTopMargin: CGFloat
+    private let titleBottomMargin: CGFloat
+    private let labelToBtnMargin: CGFloat
+    private let btnHigh: CGFloat
+    private let stackFieldsSpacing: CGFloat
+    private let signUpBtnTopMargin: CGFloat
+    private let topAndBottomMargin: CGFloat
+    private let leftAndRightMargin: CGFloat
+    private let loginStackSpacing: CGFloat
     
     init(
         sizePreporator: SizePreporator,
@@ -54,7 +55,8 @@ class LoginViewController: UIViewController {
         self.btnHigh = sizePreporator.prepareHigh(btnHigh)
         self.stackFieldsSpacing = sizePreporator.prepareHigh(stackFieldsSpacing)
         self.signUpBtnTopMargin = sizePreporator.prepareHigh(loginBtnTopMargin)
-        self.aroundMargin = sizePreporator.prepareWidth(aroundMargin)
+        self.topAndBottomMargin = sizePreporator.prepareHigh(aroundMargin)
+        self.leftAndRightMargin = sizePreporator.prepareWidth(aroundMargin)
         self.loginStackSpacing = sizePreporator.prepareWidth(loginStackSpacing)
         super.init(nibName: nil, bundle: nil)
     }
@@ -109,22 +111,22 @@ extension LoginViewController {
         view.addSubview(bottomStackView)
         
         NSLayoutConstraint.activate([
-            welcomeLabel.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: aroundMargin),
+            welcomeLabel.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: topAndBottomMargin),
             welcomeLabel.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: titleTopMargin),
             welcomeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: welcomeLabel.bottomAnchor, constant: titleBottomMargin),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: aroundMargin),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -aroundMargin)
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leftAndRightMargin),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin)
         ])
         
         NSLayoutConstraint.activate([
             bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: signUpBtnTopMargin),
-            bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: aroundMargin),
-            bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -aroundMargin),
-            bottomStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -aroundMargin)
+            bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leftAndRightMargin),
+            bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin),
+            bottomStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -topAndBottomMargin)
         ])
     }
 }
