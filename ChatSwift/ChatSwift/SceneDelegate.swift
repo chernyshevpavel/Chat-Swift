@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         let sizePreparator = Iphone11SizePreporator()
-        window?.rootViewController = AuthViewController(sizePreporator: sizePreparator)
+        window?.rootViewController = MainTabBarController()
         window?.makeKeyAndVisible()
     }
 
