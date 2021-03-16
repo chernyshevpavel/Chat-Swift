@@ -7,15 +7,41 @@
 
 import UIKit
 
-class ListViewController: UIViewController {
+struct MChat: Hashable {
+    var id = UUID()
+    var userName: String
+    var userImage: UIImage?
+    var lastMessage: String
     
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func ==(lhs: MChat, rhs: MChat) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+class ListViewController: UIViewController {
+    let activeChats: [MChat] = [
+        MChat(userName: "George", userImage: UIImage(named: "human1"), lastMessage: "Hello"),
+        MChat(userName: "Bob", userImage: UIImage(named: "human2"), lastMessage: "Hi!"),
+        MChat(userName: "Poul", userImage: UIImage(named: "human3"), lastMessage: "WatsUp?"),
+        MChat(userName: "Mila", userImage: UIImage(named: "human4"), lastMessage: "How are you?")
+    ]
     var collectionView: UICollectionView!
+    enum Section: Int, CaseIterable {
+        case activeChats
+    }
+    var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         setupCollectionView()
+        createDataSource()
+        reloadData()
         setupSearchBar()
     }
     
@@ -26,9 +52,6 @@ class ListViewController: UIViewController {
         view.addSubview(collectionView)
         
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
     }
     
     private func setupSearchBar() {
@@ -40,6 +63,27 @@ class ListViewController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
+    }
+    
+    private func createDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (colectionView, indexPath, chat) -> UICollectionViewCell? in
+            guard let section = Section(rawValue: indexPath.section) else {
+                fatalError("Unknown section kind")
+            }
+            switch section {
+            case .activeChats:
+                let cell = colectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
+                cell.backgroundColor = .systemBlue
+                return cell
+            }
+        })
+    }
+    
+    private func reloadData() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MChat>()
+        snapshot.appendSections([.activeChats])
+        snapshot.appendItems(activeChats, toSection: .activeChats)
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     private func createCompositionLayout() -> UICollectionViewLayout {
@@ -62,19 +106,6 @@ class ListViewController: UIViewController {
     }
 }
 
-// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-extension ListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
-        cell.backgroundColor = .red
-        cell.layer.borderWidth = 1
-        return cell
-    }
-}
 
 extension ListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
