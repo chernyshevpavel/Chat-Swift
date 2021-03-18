@@ -7,11 +7,18 @@
 
 import UIKit
 
-struct MChat: Hashable {
-    var id = UUID()
+struct MChat: Hashable, Decodable {
+    var id: Int
     var userName: String
-    var userImage: UIImage?
+    var userImage: String?
     var lastMessage: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case userName = "username"
+        case userImage = "userImageString"
+        case lastMessage = "lastMessage"
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -23,15 +30,11 @@ struct MChat: Hashable {
 }
 
 class ListViewController: UIViewController {
-    let activeChats: [MChat] = [
-        MChat(userName: "George", userImage: UIImage(named: "human1"), lastMessage: "Hello"),
-        MChat(userName: "Bob", userImage: UIImage(named: "human2"), lastMessage: "Hi!"),
-        MChat(userName: "Poul", userImage: UIImage(named: "human3"), lastMessage: "WatsUp?"),
-        MChat(userName: "Mila", userImage: UIImage(named: "human4"), lastMessage: "How are you?")
-    ]
+    let activeChats = Bundle.main.decode([MChat].self, from: "activeChats.json")
+    let waitingChats = Bundle.main.decode([MChat].self, from: "waitingChats.json")
     var collectionView: UICollectionView!
     enum Section: Int, CaseIterable {
-        case activeChats
+        case activeChats, waitingChats
     }
     var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     
@@ -52,6 +55,7 @@ class ListViewController: UIViewController {
         view.addSubview(collectionView)
         
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid2")
     }
     
     private func setupSearchBar() {
@@ -75,14 +79,19 @@ class ListViewController: UIViewController {
                 let cell = colectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
                 cell.backgroundColor = .systemBlue
                 return cell
+            case .waitingChats:
+                let cell = colectionView.dequeueReusableCell(withReuseIdentifier: "cellid2", for: indexPath)
+                cell.backgroundColor = .systemRed
+                return cell
             }
         })
     }
     
     private func reloadData() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, MChat>()
-        snapshot.appendSections([.activeChats])
+        snapshot.appendSections([.activeChats, .waitingChats])
         snapshot.appendItems(activeChats, toSection: .activeChats)
+        snapshot.appendItems(waitingChats, toSection: .waitingChats)
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
