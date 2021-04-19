@@ -12,5 +12,6 @@
 * UICollectionView Compositional Layout
 * UICollectionView Diffable Datasource
 * MessageKit
+
 ## Screenshots
 ![Chat-Swift](https://github.com/chernyshevpavel/chat-swift/raw/main/screenshots/1.png)
