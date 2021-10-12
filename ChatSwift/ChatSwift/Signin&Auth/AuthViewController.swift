@@ -38,7 +38,7 @@ class AuthViewController: UIViewController {
     private let leftAndRightMargin: CGFloat
     
     init(
-        sizePreporator: SizePreporator,
+        sizePreporator: SizePreparator,
         logoMargin: CGFloat = 160,
         labelToBtnMargin: CGFloat = 20,
         btnHigh: CGFloat = 60,
@@ -120,7 +120,7 @@ struct AuthViewControllerProvider: PreviewProvider {
     struct ContainerView: UIViewControllerRepresentable {
         let viewController: AuthViewController
         init() {
-            self.viewController = AuthViewController(sizePreporator: Iphone11SizePreporator())
+            self.viewController = AuthViewController(sizePreporator: Iphone11SizePreparator())
         }
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<AuthViewControllerProvider.ContainerView>) -> AuthViewController {

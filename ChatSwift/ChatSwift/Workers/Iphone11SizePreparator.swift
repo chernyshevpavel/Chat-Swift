@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Iphone11SizePreporator: SizePreporator {
+class Iphone11SizePreparator: SizePreparator {
     let screenHigh: CGFloat = 896
     let screenWidth: CGFloat = 414
     

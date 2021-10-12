@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SizePreporator {
+protocol SizePreparator {
     func prepareHigh(_ high: CGFloat) -> CGFloat
     func prepareWidth(_ width: CGFloat) -> CGFloat
 }

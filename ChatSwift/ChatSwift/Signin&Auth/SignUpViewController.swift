@@ -37,7 +37,7 @@ class SignUpViewController: UIViewController {
     private let loginStackSpacing: CGFloat
     
     init(
-        sizePreporator: SizePreporator,
+        sizePreporator: SizePreparator,
         titleMargin: CGFloat = 160,
         btnHigh: CGFloat = 60,
         stackFieldsSpacing: CGFloat = 40,
@@ -133,7 +133,7 @@ struct SignUpVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let signUpVC = SignUpViewController(sizePreporator: Iphone11SizePreporator())
+        let signUpVC = SignUpViewController(sizePreporator: Iphone11SizePreparator())
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<SignUpVCProvider.ContainerView>) -> SignUpViewController {
             signUpVC

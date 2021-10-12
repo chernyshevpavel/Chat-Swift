@@ -34,7 +34,7 @@ class AddPhotoView: UIView {
     let btnLeftMargin: CGFloat
     
     init(
-        sizePreporator: SizePreporator,
+        sizePreporator: SizePreparator,
         frame: CGRect,
         imageWidthAndHigh: CGFloat = 100,
         btnWidthAndHigh: CGFloat = 30,

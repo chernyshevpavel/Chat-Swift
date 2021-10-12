@@ -32,7 +32,7 @@ class SetupProfileViewController: UIViewController {
     private let leftAndRightMargin: CGFloat
     
     init(
-        sizePreporator: SizePreporator,
+        sizePreporator: SizePreparator,
         titleTopMargin: CGFloat = 160,
         imageTopMargin: CGFloat = 40,
         btnHigh: CGFloat = 60,
@@ -135,7 +135,7 @@ struct SetupProfileVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let setupProfileVC = SetupProfileViewController(sizePreporator: Iphone11SizePreporator())
+        let setupProfileVC = SetupProfileViewController(sizePreporator: Iphone11SizePreparator())
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<SetupProfileVCProvider.ContainerView>) -> SetupProfileViewController {
             setupProfileVC

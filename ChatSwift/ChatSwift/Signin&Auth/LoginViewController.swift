@@ -39,7 +39,7 @@ class LoginViewController: UIViewController {
     private let loginStackSpacing: CGFloat
     
     init(
-        sizePreporator: SizePreporator,
+        sizePreporator: SizePreparator,
         titleTopMargin: CGFloat = 160,
         titleBottomMargin: CGFloat = 100,
         labelToBtnMargin: CGFloat = 20,
@@ -141,7 +141,7 @@ struct LoginVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let loginVC = LoginViewController(sizePreporator: Iphone11SizePreporator())
+        let loginVC = LoginViewController(sizePreporator: Iphone11SizePreparator())
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<LoginVCProvider.ContainerView>) -> LoginViewController {
             loginVC
