@@ -41,7 +41,7 @@ class PeopleViewController: UIViewController {
         
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
     }
     
     private func setupSearchBar() {
@@ -54,7 +54,6 @@ class PeopleViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
     }
-    
     
     private func reloadData() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, MUser>()
@@ -75,9 +74,7 @@ extension PeopleViewController {
             switch section {
             
             case .users:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
-                cell.backgroundColor = .darkGray
-                return cell
+                return self.configurate(collectionView: collectionView, cellType: UserCell.self, with: user, for: indexPath)
             }
         })
         

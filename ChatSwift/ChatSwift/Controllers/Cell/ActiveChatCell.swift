@@ -29,7 +29,10 @@ class ActiveChatCell: UICollectionViewCell, SelfConfiguringCell {
         fatalError("init?(coder: NSCoder) has not been implemented")
     }
     
-    func configure(with value: MChat) {
+    func configure<U>(with value: U) where U : Hashable {
+        guard let value = value as? MChat else {
+            return
+        }
         friendImageView.image = UIImage(named: value.userImage ?? "")
         friendName.text = value.userImage
         lastMessage.text = value.lastMessage

@@ -72,7 +72,7 @@ class ListViewController: UIViewController {
 // MARK: - Data source
 extension ListViewController {
     
-    private func configurate<T: SelfConfiguringCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
+    private func configurate<T: SelfConfiguringCell, U: Hashable>(cellType: T.Type, with value: U, for indexPath: IndexPath) -> T {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else {
             fatalError("Unable to dequeue \(cellType)")
         }
@@ -81,15 +81,15 @@ extension ListViewController {
     }
     
     private func createDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { (_, indexPath, chat) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { [self] (_, indexPath, chat) -> UICollectionViewCell? in
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
             switch section {
             case .activeChats:
-                return self.configurate(cellType: ActiveChatCell.self, with: chat, for: indexPath)
+                return self.configurate(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
             case .waitingChats:
-                return self.configurate(cellType: WaitingChatCell.self, with: chat, for: indexPath)
+                return self.configurate(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
             }
         })
         dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
