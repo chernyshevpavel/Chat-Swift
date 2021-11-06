@@ -37,6 +37,11 @@ class AuthViewController: UIViewController {
     private let topAndBottomMargin: CGFloat
     private let leftAndRightMargin: CGFloat
     
+    private let sizePreporator: SizePreparator
+    
+    private lazy var signUpVC = SignUpViewController(sizePreporator: sizePreporator)
+    private lazy var loginVC = LoginViewController(sizePreporator: sizePreporator)
+    
     init(
         sizePreporator: SizePreparator,
         logoMargin: CGFloat = 160,
@@ -45,6 +50,7 @@ class AuthViewController: UIViewController {
         stackViewSpacing: CGFloat = 40,
         aroundMargin: CGFloat = 40
     ) {
+        self.sizePreporator = sizePreporator
         self.logoMargin = sizePreporator.prepareHigh(logoMargin)
         self.labelToBtnMargin = sizePreporator.prepareHigh(labelToBtnMargin)
         self.btnHigh = sizePreporator.prepareHigh(btnHigh)
@@ -63,6 +69,17 @@ class AuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupConstraints()
+        
+        emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func emailButtonTapped() {
+        present(signUpVC, animated: true, completion: nil)
+    }
+    
+    @objc private func loginButtonTapped() {
+        present(loginVC, animated: true, completion: nil)
     }
 }
 

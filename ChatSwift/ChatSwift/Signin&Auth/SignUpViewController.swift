@@ -65,7 +65,23 @@ class SignUpViewController: UIViewController {
         
         view.backgroundColor = .white
         setupConstraints()
+        
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
+    
+    @objc private func signUpButtonTapped() {
+        AuthService.shared.register(email: emailTextField.text,
+                                    password: passwordTextField.text,
+                                    confirmPassword: confirmPasswordTextField.text) { (result) in
+            switch result {
+            case .success(let user):
+                self.showAlert(with: "Успешно!", and: "Вы зарегистрированны! (\(user.email ?? "")")
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        }
+    }
+
 }
 
 // MARK: - Setup constraints
@@ -120,6 +136,17 @@ extension SignUpViewController {
             bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -leftAndRightMargin),
             bottomStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -leftAndRightMargin)
         ])
+    }
+}
+
+// Show alert
+extension UIViewController {
+    
+    func showAlert(with title: String, and message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
 }
 

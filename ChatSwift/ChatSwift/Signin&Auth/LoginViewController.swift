@@ -58,6 +58,7 @@ class LoginViewController: UIViewController {
         self.topAndBottomMargin = sizePreporator.prepareHigh(aroundMargin)
         self.leftAndRightMargin = sizePreporator.prepareWidth(aroundMargin)
         self.loginStackSpacing = sizePreporator.prepareWidth(loginStackSpacing)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,6 +72,20 @@ class LoginViewController: UIViewController {
         
         view.backgroundColor = .white
         setupConstraints()
+        
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func loginButtonTapped() {
+        AuthService.shared.login(email: emailTextField.text ?? "",
+                                 password: passwordTextField.text ?? "") { (result) in
+            switch result {
+            case .success(_):
+                self.showAlert(with: "Успешно!", and: "Вы авторизованы!")
+            case .failure(let error):
+                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+            }
+        }
     }
 }
 
