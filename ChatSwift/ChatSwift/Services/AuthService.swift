@@ -13,9 +13,24 @@ class AuthService {
     
     static let shared = AuthService()
     
+    typealias StringValidator = Validator
+    
+    lazy var emailValidator: some AnyStringValidator = EmailValidator()
+    lazy var stringFillValidator: some AnyStringValidator = StringFillValidator()
+    
     func login(email: String?, password: String?, completion: @escaping (Result<User, Error>) -> Void) {
-        guard let email = email, let password = password else {
-            // MARK: - TODO send error to completion
+        
+        guard stringFillValidator.validate(value: email),
+              stringFillValidator.validate(value: password),
+              let email = email,
+              let password = password
+        else {
+            completion(.failure(AuthError.notFilled))
+            return
+        }
+        
+        guard emailValidator.validate(value: email) else {
+            completion(.failure(AuthError.invalidEmail))
             return
         }
 
@@ -31,8 +46,24 @@ class AuthService {
     }
     
     func register(email: String?, password: String?, confirmPassword: String?, completion: @escaping (Result<User, Error>) -> Void) {
-        guard let email = email, let password = password else {
-            // MARK: - TODO send error to completion
+        guard stringFillValidator.validate(value: email),
+              stringFillValidator.validate(value: password),
+              stringFillValidator.validate(value: confirmPassword),
+              let email = email,
+              let password = password,
+              let confirmPassword = confirmPassword
+        else {
+            completion(.failure(AuthError.notFilled))
+            return
+        }
+        
+        guard emailValidator.validate(value: email) else {
+            completion(.failure(AuthError.invalidEmail))
+            return
+        }
+        
+        guard password.lowercased() == confirmPassword.lowercased() else {
+            completion(.failure(AuthError.passwordsNotMatched))
             return
         }
         

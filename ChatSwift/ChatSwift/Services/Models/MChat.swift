@@ -24,7 +24,7 @@ struct MChat: Hashable, Decodable {
         hasher.combine(id)
     }
     
-    static func ==(lhs: MChat, rhs: MChat) -> Bool {
+    static func == (lhs: MChat, rhs: MChat) -> Bool {
         lhs.id == rhs.id
     }
 }

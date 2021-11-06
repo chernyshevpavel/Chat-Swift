@@ -38,7 +38,7 @@ class WaitingChatCell: UICollectionViewCell, SelfConfiguringCell {
         ])
     }
     
-    func configure<U>(with value: U) where U : Hashable {
+    func configure<U>(with value: U) where U: Hashable {
         guard let value = value as? MChat else {
             return
         }

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class ChatRequestViewController: UIViewController {
     
     let containerView = UIView()
@@ -104,7 +103,7 @@ struct ChatRequestVCProvider: PreviewProvider {
         let chatRequestVC = ChatRequestViewController()
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<ChatRequestVCProvider.ContainerView>) -> ChatRequestViewController {
-            return chatRequestVC
+            chatRequestVC
         }
         
         func updateUIViewController(_ uiViewController: ChatRequestVCProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<ChatRequestVCProvider.ContainerView>) {

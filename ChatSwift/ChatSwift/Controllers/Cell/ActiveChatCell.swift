@@ -29,7 +29,7 @@ class ActiveChatCell: UICollectionViewCell, SelfConfiguringCell {
         fatalError("init?(coder: NSCoder) has not been implemented")
     }
     
-    func configure<U>(with value: U) where U : Hashable {
+    func configure<U>(with value: U) where U: Hashable {
         guard let value = value as? MChat else {
             return
         }
