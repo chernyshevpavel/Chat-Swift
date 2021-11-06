@@ -79,7 +79,7 @@ struct TextFieldProvider: PreviewProvider {
         let profileVC = ProfileViewController()
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<TextFieldProvider.ContainerView>) -> ProfileViewController {
-            return profileVC
+            profileVC
         }
         
         func updateUIViewController(_ uiViewController: TextFieldProvider.ContainerView.UIViewControllerType, context: UIViewControllerRepresentableContext<TextFieldProvider.ContainerView>) {
