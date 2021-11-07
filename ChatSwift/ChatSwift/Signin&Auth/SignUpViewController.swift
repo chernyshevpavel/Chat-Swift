@@ -15,7 +15,12 @@ class SignUpViewController: UIViewController {
     let confirmPasswodLabel = UILabel(text: "Confirm password")
     let alreadyOnboardLabel = UILabel(text: "Already onboard?")
     
-    let emailTextField = OneLineTextField(font: .avenir20())
+    let emailTextField: OneLineTextField = {
+        let textField = OneLineTextField(font: .avenir20())
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
+        return textField
+    }()
     let passwordTextField = OneLineTextField(font: .avenir20())
     let confirmPasswordTextField = OneLineTextField(font: .avenir20())
     
@@ -28,6 +33,8 @@ class SignUpViewController: UIViewController {
         return button
     }()
     
+    weak var delegate: AuthNavigatingDelegate?
+    
     private let titleMargin: CGFloat
     private let btnHigh: CGFloat
     private let stackFieldsSpacing: CGFloat
@@ -35,6 +42,7 @@ class SignUpViewController: UIViewController {
     private let topAndBottomMargin: CGFloat
     private let leftAndRightMargin: CGFloat
     private let loginStackSpacing: CGFloat
+    private let sizePreporator: SizePreparator
     
     init(
         sizePreporator: SizePreparator,
@@ -45,6 +53,7 @@ class SignUpViewController: UIViewController {
         loginStackSpacing: CGFloat = 10,
         aroundMargin: CGFloat = 40
     ) {
+        self.sizePreporator = sizePreporator
         self.titleMargin = sizePreporator.prepareHigh(titleMargin)
         self.btnHigh = sizePreporator.prepareHigh(btnHigh)
         self.stackFieldsSpacing = sizePreporator.prepareHigh(stackFieldsSpacing)
@@ -67,6 +76,7 @@ class SignUpViewController: UIViewController {
         setupConstraints()
         
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
     @objc private func signUpButtonTapped() {
@@ -74,14 +84,22 @@ class SignUpViewController: UIViewController {
                                     password: passwordTextField.text,
                                     confirmPassword: confirmPasswordTextField.text) { (result) in
             switch result {
-            case .success(let user):
-                self.showAlert(with: "Успешно!", and: "Вы зарегистрированны! (\(user.email ?? "")")
+            case .success:
+                self.showAlert(with: "Успешно!", and: "Вы зарегистрированны!") { [weak self] in
+                    guard let self = self else { return }
+                    self.present(SetupProfileViewController(sizePreporator: self.sizePreporator), animated: true, completion: nil)
+                }
             case .failure(let error):
                 self.showAlert(with: "Ошибка!", and: error.localizedDescription)
             }
         }
     }
 
+    @objc private func loginButtonTapped() {
+        self.dismiss(animated: true) {
+            self.delegate?.toLoginVC()
+        }
+    }
 }
 
 // MARK: - Setup constraints
@@ -142,9 +160,11 @@ extension SignUpViewController {
 // Show alert
 extension UIViewController {
     
-    func showAlert(with title: String, and message: String) {
+    func showAlert(with title: String, and message: String, completion: @escaping () -> Void = {}) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            completion()
+        }
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }

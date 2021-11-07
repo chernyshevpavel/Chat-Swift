@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol AuthNavigatingDelegate: AnyObject {
+    func toLoginVC()
+    func toSignUpVC()
+}
+
 class AuthViewController: UIViewController {
     
     let logoImageView = UIImageView(image: #imageLiteral(resourceName: "Logo"), contentMode: .scaleAspectFit)
@@ -39,8 +44,16 @@ class AuthViewController: UIViewController {
     
     private let sizePreporator: SizePreparator
     
-    private lazy var signUpVC = SignUpViewController(sizePreporator: sizePreporator)
-    private lazy var loginVC = LoginViewController(sizePreporator: sizePreporator)
+    private lazy var signUpVC: SignUpViewController = {
+        let vc = SignUpViewController(sizePreporator: sizePreporator)
+        vc.delegate = self
+        return vc
+    }()
+    private lazy var loginVC: LoginViewController = {
+        let vc = LoginViewController(sizePreporator: sizePreporator)
+        vc.delegate = self
+        return vc
+    }()
     
     init(
         sizePreporator: SizePreparator,
@@ -75,11 +88,23 @@ class AuthViewController: UIViewController {
     }
     
     @objc private func emailButtonTapped() {
-        present(signUpVC, animated: true, completion: nil)
+        toSignUpVC()
     }
     
     @objc private func loginButtonTapped() {
+        toLoginVC()
+    }
+}
+
+// MARK: - Navigation
+
+extension AuthViewController: AuthNavigatingDelegate {
+    func toLoginVC() {
         present(loginVC, animated: true, completion: nil)
+    }
+    
+    func toSignUpVC() {
+        present(signUpVC, animated: true, completion: nil)
     }
 }
 
