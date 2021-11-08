@@ -86,11 +86,12 @@ class SetupProfileViewController: UIViewController {
                                                 userName: fullNameTextField.text,
                                                 avatarImageString: "",
                                                 description: aboutMeTextField.text,
-                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)))
-        { [weak self] result in
+                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex))) { [weak self] result in
             switch result {
             case .success:
-                self?.showAlert(with: "Success".localizedCapitalized, and: "Glad to see you".localizedCapitalized)
+                self?.showAlert(with: "Success".localizedCapitalized, and: "Glad to see you".localizedCapitalized) {
+                    self?.present(MainTabBarController(), animated: true, completion: nil)
+                }
             case .failure(let error):
                 self?.showAlert(with: "Error!".localizedCapitalized, and: error.localizedDescription)
             }

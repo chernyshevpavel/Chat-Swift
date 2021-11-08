@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PeopleViewController: UIViewController {
     
-    let users = Bundle.main.decode([MUser].self, from: "users.json")
+    let users: [MUser] = []
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
+    lazy var dataSource: UICollectionViewDiffableDataSource<Section, MUser> = UICollectionViewDiffableDataSource<Section, MUser>()
     
     enum Section: Int, CaseIterable {
         case users
@@ -31,6 +32,8 @@ class PeopleViewController: UIViewController {
         setupCollectionView()
         createDataSource()
         reloadData()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOut))
     }
     
     private func setupCollectionView() {
@@ -64,7 +67,21 @@ class PeopleViewController: UIViewController {
         snapshot.appendSections([.users])
         snapshot.appendItems(filtred, toSection: .users)
         
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    @objc private func signOut() {
+        let ac = UIAlertController(title: nil, message: "Are you sure you want to sign out?", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Sign Out", style: .destructive, handler: { (_) in
+            do {
+                try Auth.auth().signOut()
+                UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController = AuthViewController(sizePreporator: Iphone11SizePreparator())
+            } catch {
+                print("Error signing out: \(error.localizedDescription)")
+            }
+        }))
+        present(ac, animated: true, completion: nil)
     }
 }
 
@@ -82,7 +99,7 @@ extension PeopleViewController {
             }
         })
         
-        dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else {
                 fatalError("Cannot create ne section")
             }
