@@ -89,9 +89,9 @@ class LoginViewController: UIViewController {
                                  password: passwordTextField.text ?? "") { (result) in
             switch result {
             case .success(_):
-                self.showAlert(with: "Успешно!", and: "Вы авторизованы!")
+                self.showAlert(with: "Success!".localizedCapitalized, and: "You are authorized!".localizedCapitalized)
             case .failure(let error):
-                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+                self.showAlert(with: "Error!".localizedCapitalized, and: error.localizedDescription)
             }
         }
     }

@@ -84,13 +84,13 @@ class SignUpViewController: UIViewController {
                                     password: passwordTextField.text,
                                     confirmPassword: confirmPasswordTextField.text) { (result) in
             switch result {
-            case .success:
-                self.showAlert(with: "Успешно!", and: "Вы зарегистрированны!") { [weak self] in
+            case .success(let user):
+                self.showAlert(with: "Success!".localizedCapitalized, and: "You are registred!".localizedCapitalized) { [weak self] in
                     guard let self = self else { return }
-                    self.present(SetupProfileViewController(sizePreporator: self.sizePreporator), animated: true, completion: nil)
+                    self.present(SetupProfileViewController(currentUser: user, sizePreporator: self.sizePreporator), animated: true, completion: nil)
                 }
             case .failure(let error):
-                self.showAlert(with: "Ошибка!", and: error.localizedDescription)
+                self.showAlert(with: "Error!".localizedCapitalized, and: error.localizedDescription)
             }
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 class SetupProfileViewController: UIViewController {
     
@@ -31,7 +32,10 @@ class SetupProfileViewController: UIViewController {
     private let topAndBottomMargin: CGFloat
     private let leftAndRightMargin: CGFloat
     
+    private let currentUser: User
+    
     init(
+        currentUser: User,
         sizePreporator: SizePreparator,
         titleTopMargin: CGFloat = 160,
         imageTopMargin: CGFloat = 40,
@@ -44,6 +48,7 @@ class SetupProfileViewController: UIViewController {
         addBtnWidthAndHigh: CGFloat = 30,
         addBtnLeftMargin: CGFloat = 16
     ) {
+        self.currentUser = currentUser
         self.fullImageView = AddPhotoView(
             sizePreporator: sizePreporator,
             frame: CGRect(),
@@ -71,6 +76,25 @@ class SetupProfileViewController: UIViewController {
         
         view.backgroundColor = .white
         setupConstraints()
+        goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func goToChatsButtonTapped() {
+        FirestoreService.shared.saveProfile(with: .init(
+                                                id: currentUser.uid,
+                                                email: currentUser.email ?? "",
+                                                userName: fullNameTextField.text,
+                                                avatarImageString: "",
+                                                description: aboutMeTextField.text,
+                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)))
+        { [weak self] result in
+            switch result {
+            case .success:
+                self?.showAlert(with: "Success".localizedCapitalized, and: "Glad to see you".localizedCapitalized)
+            case .failure(let error):
+                self?.showAlert(with: "Error!".localizedCapitalized, and: error.localizedDescription)
+            }
+        }
     }
 }
 
@@ -135,7 +159,7 @@ struct SetupProfileVCProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let setupProfileVC = SetupProfileViewController(sizePreporator: Iphone11SizePreparator())
+        let setupProfileVC = SetupProfileViewController(currentUser: Auth.auth().currentUser!, sizePreporator: Iphone11SizePreparator())
         
         func makeUIViewController(context: UIViewControllerRepresentableContext<SetupProfileVCProvider.ContainerView>) -> SetupProfileViewController {
             setupProfileVC
