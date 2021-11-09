@@ -8,9 +8,9 @@
 import UIKit
 
 class ListViewController: UIViewController {
-    let activeChats = Bundle.main.decode([MChat].self, from: "activeChats.json")
-    let waitingChats = Bundle.main.decode([MChat].self, from: "waitingChats.json")
-    var collectionView: UICollectionView!
+    let activeChats: [MChat] = [] // = Bundle.main.decode([MChat].self, from: "activeChats.json")
+    let waitingChats: [MChat] = [] // = Bundle.main.decode([MChat].self, from: "waitingChats.json")
+    lazy var collectionView = UICollectionView()
     
     enum Section: Int, CaseIterable {
         case waitingChats, activeChats
@@ -25,6 +25,19 @@ class ListViewController: UIViewController {
         }
     }
     var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
+    
+    private let currentUser: MUser
+    
+    init(currentUser: MUser) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        title = currentUser.userName
+    }
+    
+    @available (*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

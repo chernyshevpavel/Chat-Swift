@@ -11,8 +11,21 @@ import FirebaseAuth
 class PeopleViewController: UIViewController {
     
     let users: [MUser] = []
-    var collectionView: UICollectionView!
+    lazy var collectionView = UICollectionView()
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, MUser> = UICollectionViewDiffableDataSource<Section, MUser>()
+    
+    private let currentUser: MUser
+    
+    init(currentUser: MUser) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        title = currentUser.userName
+    }
+    
+    @available (*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     enum Section: Int, CaseIterable {
         case users
@@ -76,7 +89,7 @@ class PeopleViewController: UIViewController {
         ac.addAction(UIAlertAction(title: "Sign Out", style: .destructive, handler: { (_) in
             do {
                 try Auth.auth().signOut()
-                UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController = AuthViewController(sizePreporator: Iphone11SizePreparator())
+                UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController = AuthViewController(sizePreporator: Iphone11SizePreparator())
             } catch {
                 print("Error signing out: \(error.localizedDescription)")
             }

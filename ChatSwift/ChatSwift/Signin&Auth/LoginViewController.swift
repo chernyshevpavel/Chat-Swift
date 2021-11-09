@@ -92,8 +92,10 @@ class LoginViewController: UIViewController {
                 self.showAlert(with: "Success!".localizedCapitalized, and: "You are authorized!".localizedCapitalized) {
                     FirestoreService.shared.getUserData(user: user) { (result) in
                         switch result {
-                        case .success(_):
-                            self.present(MainTabBarController(), animated: true, completion: nil)
+                        case .success(let user):
+                            let mainTabbarConntroller = MainTabBarController(currentUser: user)
+                            mainTabbarConntroller.modalPresentationStyle = .fullScreen
+                            self.present(mainTabbarConntroller, animated: true, completion: nil)
                         case .failure(_):
                             self.present(SetupProfileViewController(currentUser: user, sizePreporator: Iphone11SizePreparator()), animated: true, completion: nil)
                         }
