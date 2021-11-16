@@ -63,6 +63,11 @@ class SetupProfileViewController: UIViewController {
         self.segmentedTopMargin = sizePreporator.prepareHigh(segmentedTopMargin)
         self.topAndBottomMargin = sizePreporator.prepareHigh(aroundMargin)
         self.leftAndRightMargin = sizePreporator.prepareWidth(aroundMargin)
+        
+        if let username = currentUser.displayName {
+            fullNameTextField.text = username
+        }
+        // TODO set google image 
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -12,7 +12,7 @@ class PeopleViewController: UIViewController {
     
     let users: [MUser] = []
     lazy var collectionView = UICollectionView()
-    lazy var dataSource: UICollectionViewDiffableDataSource<Section, MUser> = UICollectionViewDiffableDataSource<Section, MUser>()
+    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
     
     private let currentUser: MUser
     

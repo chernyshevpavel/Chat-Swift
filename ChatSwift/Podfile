@@ -10,6 +10,7 @@ target 'ChatSwift' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Firestore'
   pod 'Firebase/Auth'
+  pod 'GoogleSignIn'
 
   target 'ChatSwiftTests' do
     inherit! :search_paths
