@@ -59,13 +59,12 @@ class AuthService {
         
         Auth.auth().signIn(with: credential) { (result, error) in
             guard let result = result else {
-                completion(.failure(error!))
+                completion(.failure(error ?? AuthError.unknownError))
                 return
             }
             completion(.success(result.user))
         }
     }
-    
     
     func register(email: String?, password: String?, confirmPassword: String?, completion: @escaping (Result<User, Error>) -> Void) {
         guard stringFillValidator.validate(value: email),

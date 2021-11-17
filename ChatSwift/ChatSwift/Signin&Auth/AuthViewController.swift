@@ -88,8 +88,6 @@ class AuthViewController: UIViewController {
         emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         googleButton.addTarget(self, action: #selector(googleButtonTapped), for: .touchUpInside)
-        
-        //GIDSignIn.sharedInstance.
     }
     
     @objc private func emailButtonTapped() {
@@ -105,8 +103,9 @@ class AuthViewController: UIViewController {
 
         // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientID)
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
-            self.sign(GIDSignIn.sharedInstance, didSignInFor: user, withError: error)
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [weak self] user, error in
+            guard let user = user else { return }
+            self?.sign(GIDSignIn.sharedInstance, didSignInFor: user, withError: error)
         }
     }
 }
@@ -168,21 +167,21 @@ extension AuthViewController {
 
 // MARK: - GIDSignInDelegate
 extension AuthViewController {
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+    func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
         AuthService.shared.googleLogin(user: user, error: error) { (result) in
             switch result {
             case .success(let user):
                 FirestoreService.shared.getUserData(user: user) { (result) in
                     switch result {
                     case .success(let muser):
-                        self.showAlert(with: "Успешно", and: "Вы авторизованы") {
+                        UIApplication.getTopViewController()?.showAlert(with: "Успешно", and: "Вы авторизованы") {
                             let mainTabBar = MainTabBarController(currentUser: muser)
                             mainTabBar.modalPresentationStyle = .fullScreen
-                            self.present(mainTabBar, animated: true, completion: nil)
+                            UIApplication.getTopViewController()?.present(mainTabBar, animated: true, completion: nil)
                         }
                     case .failure(_):
-                        self.showAlert(with: "Успешно", and: "Вы зарегистрированны") {
-                            self.present(SetupProfileViewController(currentUser: user, sizePreporator: self.sizePreporator), animated: true, completion: nil)
+                        UIApplication.getTopViewController()?.showAlert(with: "Успешно", and: "Вы зарегистрированны") {
+                            UIApplication.getTopViewController()?.present(SetupProfileViewController(currentUser: user, sizePreporator: Iphone11SizePreparator()), animated: true, completion: nil)
                         }
                     }
                 }
