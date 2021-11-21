@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import UIKit
 
 class FirestoreService {
     static let shared = FirestoreService()
@@ -49,13 +50,28 @@ class FirestoreService {
             return
         }
         
-        let mUser = MUser(id: profileModel.id, userName: userName, email: profileModel.email, description: description, sex: sex, avatarStringURL: profileModel.avatarImageString)
+        guard let avatarImage = profileModel.avatarImage, avatarImage != #imageLiteral(resourceName: "avatar")
+        else {
+            completion(.failure(UserError.photoNotExist))
+            return
+        }
         
-        self.usersRef.document(mUser.id).setData(mUser.representation) { error in
-            if let error = error {
+        var muser = MUser(id: profileModel.id, userName: userName, email: profileModel.email, description: description, sex: sex, avatarStringURL: nil)
+        
+        StorageService.shared.upload(photo: avatarImage) { (result) in
+            switch result {
+                
+            case .success(let url):
+                muser.avatarStringURL = url.absoluteString
+                self.usersRef.document(muser.id).setData(muser.representation) { (error) in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(muser))
+                    }
+                }
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(mUser))
             }
         }
     }
@@ -66,7 +82,7 @@ struct FSProfileModel {
     var id: String
     var email: String
     var userName: String?
-    var avatarImageString: String?
+    var avatarImage: UIImage?
     var description: String?
     var sex: String?
 }

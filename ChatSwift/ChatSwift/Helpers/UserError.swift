@@ -12,6 +12,7 @@ enum UserError {
     case photoNotExist
     case cannotGetUserInfo
     case cannotUnwrapToMUser
+    case cannotConvertImage
 }
 
 extension UserError: LocalizedError {
@@ -25,6 +26,8 @@ extension UserError: LocalizedError {
             return "Couldn't load user information from Firebase".localizedCapitalized
         case .cannotUnwrapToMUser:
             return "Couldn't convert Uset to MUser".localizedCapitalized
+        case .cannotConvertImage:
+            return "Couldn't convert image".localizedCapitalized
         }
     }
 }

@@ -82,6 +82,14 @@ class SetupProfileViewController: UIViewController {
         view.backgroundColor = .white
         setupConstraints()
         goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+        fullImageView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func plusButtonTapped() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
     }
     
     @objc private func goToChatsButtonTapped() {
@@ -89,7 +97,7 @@ class SetupProfileViewController: UIViewController {
                                                 id: currentUser.uid,
                                                 email: currentUser.email ?? "",
                                                 userName: fullNameTextField.text,
-                                                avatarImageString: "",
+                                                avatarImage: fullImageView.circleImageView.image,
                                                 description: aboutMeTextField.text,
                                                 sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex))) { [weak self] result in
             switch result {
@@ -103,6 +111,16 @@ class SetupProfileViewController: UIViewController {
                 self?.showAlert(with: "Error!".localizedCapitalized, and: error.localizedDescription)
             }
         }
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension SetupProfileViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        fullImageView.circleImageView.image = image
     }
 }
 
