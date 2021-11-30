@@ -21,7 +21,7 @@ class PeopleViewController: UIViewController {
     init(currentUser: MUser) {
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
-        title = currentUser.userName
+        title = currentUser.username
     }
     
     deinit {
@@ -73,6 +73,8 @@ class PeopleViewController: UIViewController {
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
         collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
+        
+        collectionView.delegate = self
     }
     
     private func setupSearchBar() {
@@ -89,7 +91,7 @@ class PeopleViewController: UIViewController {
     private func reloadData(with searchText: String? = nil) {
         let filtred = users.filter { user in
             guard let searchText = searchText, !searchText.isEmpty else { return true }
-            return user.userName.lowercased().contains(searchText.lowercased())
+            return user.username.lowercased().contains(searchText.lowercased())
         }
         var snapshot = NSDiffableDataSourceSnapshot<Section, MUser>()
         snapshot.appendSections([.users])
@@ -110,6 +112,15 @@ class PeopleViewController: UIViewController {
             }
         }))
         present(ac, animated: true, completion: nil)
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+extension PeopleViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let user = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        let profileVC = ProfileViewController(user: user)
+        present(profileVC, animated: true, completion: nil)
     }
 }
 

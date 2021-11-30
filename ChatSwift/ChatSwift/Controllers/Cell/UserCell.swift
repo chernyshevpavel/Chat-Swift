@@ -50,7 +50,7 @@ class UserCell: UICollectionViewCell, SelfConfiguringCell {
             return
         }
         userImageView.image = UIImage(named: value.avatarStringURL ?? "")
-        userName.text = value.userName
+        userName.text = value.username
         guard let avatarUrl = value.avatarStringURL, let url = URL(string: avatarUrl) else { return }
         userImageView.sd_setImage(with: url, completed: nil)
     }

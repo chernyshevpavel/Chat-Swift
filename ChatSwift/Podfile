@@ -14,6 +14,7 @@ target 'ChatSwift' do
   pod 'Firebase/Auth'
   pod 'GoogleSignIn'
   pod 'SDWebImage', '~> 5.0'
+  pod 'MessageKit'
 
   target 'ChatSwiftTests' do
     inherit! :search_paths

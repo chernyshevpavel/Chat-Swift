@@ -31,7 +31,7 @@ class ListViewController: UIViewController {
     init(currentUser: MUser) {
         self.currentUser = currentUser
         super.init(nibName: nil, bundle: nil)
-        title = currentUser.userName
+        title = currentUser.username
     }
     
     @available (*, unavailable)

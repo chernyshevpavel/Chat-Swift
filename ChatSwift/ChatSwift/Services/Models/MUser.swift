@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 struct MUser: Hashable, Decodable {
     var id: String
-    var userName: String
+    var username: String
     var email: String
     var description: String
     var sex: String
@@ -19,7 +19,7 @@ struct MUser: Hashable, Decodable {
     var representation: [String: Any] {
         var rep: [String: Any] = [:]
         rep["uid"] = id
-        rep["userName"] = userName
+        rep["userName"] = username
         rep["email"] = email
         rep["description"] = description
         rep["sex"] = sex
@@ -28,7 +28,7 @@ struct MUser: Hashable, Decodable {
     }
     
     init(id: String, userName: String, email: String, description: String, sex: String, avatarStringURL: String?) {
-        self.userName = userName
+        self.username = userName
         self.email = email
         self.avatarStringURL = avatarStringURL
         self.description = description
@@ -55,7 +55,7 @@ struct MUser: Hashable, Decodable {
               let id = data["uid"] as? String
         else { return nil }
 
-        self.userName = username
+        self.username = username
         self.email = email
         self.avatarStringURL = avatarStringURL
         self.description = description
@@ -69,7 +69,7 @@ struct MUser: Hashable, Decodable {
     
     enum CodingKeys: String, CodingKey {
         case id
-        case userName = "username"
+        case username
         case email
         case description
         case sex

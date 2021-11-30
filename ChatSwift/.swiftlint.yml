@@ -39,7 +39,7 @@ opt_in_rules: # some rules are turned off by default, so you need to opt-in
 disabled_rules: # rule identifiers to exclude from running
   - trailing_whitespace
 
-warning_threshold: 15
+warning_threshold: 300
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Pods

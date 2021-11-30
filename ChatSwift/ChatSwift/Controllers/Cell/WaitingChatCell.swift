@@ -42,7 +42,7 @@ class WaitingChatCell: UICollectionViewCell, SelfConfiguringCell {
         guard let value = value as? MChat else {
             return
         }
-        friendImageView.image = UIImage(named: value.userImage ?? "")
+        friendImageView.image = UIImage(named: value.friendAvatarStringURL ?? "")
     }
 }
 

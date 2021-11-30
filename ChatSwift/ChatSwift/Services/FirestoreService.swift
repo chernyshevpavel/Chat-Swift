@@ -18,6 +18,16 @@ class FirestoreService {
         db.collection("users")
     }
     
+    private var waitingChatsRef: CollectionReference {
+        db.collection(["users", currentUser.id, "waitingChats"].joined(separator: "/"))
+    }
+    
+    private var activeChatsRef: CollectionReference {
+        db.collection(["users", currentUser.id, "activeChats"].joined(separator: "/"))
+    }
+    
+    var currentUser: MUser!
+    
     lazy var stringFillValidator: some AnyStringValidator = StringFillValidator()
     
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void) {
@@ -28,6 +38,7 @@ class FirestoreService {
                     completion(.failure(UserError.cannotUnwrapToMUser))
                     return
                 }
+                self.currentUser = muser
                 completion(.success(muser))
             } else if let error = error {
                 completion(.failure(error))
@@ -72,6 +83,30 @@ class FirestoreService {
                 }
             case .failure(let error):
                 completion(.failure(error))
+            }
+        }
+    }
+    
+    func createWaitingChat(message: String, receiver: MUser, completion: @escaping (Result<Void, Error>) -> Void) {
+        let reference = db.collection(["users", receiver.id, "waitingChats"].joined(separator: "/"))
+        let messageRef = reference.document(self.currentUser.id).collection("messages")
+        
+        let message = MMessage(user: currentUser, content: message)
+        let chat = MChat(friendUsername: currentUser.username,
+                         friendAvatarStringURL: currentUser.avatarStringURL ?? "",
+                         friendId: currentUser.id, lastMessageContent: message.content)
+        
+        reference.document(currentUser.id).setData(chat.representation) { (error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            messageRef.addDocument(data: message.representation) { (error) in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                completion(.success(Void()))
             }
         }
     }
