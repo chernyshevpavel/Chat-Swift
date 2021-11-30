@@ -8,8 +8,8 @@
 import UIKit
 
 class ListViewController: UIViewController {
-    let activeChats: [MChat] = [] // = Bundle.main.decode([MChat].self, from: "activeChats.json")
-    let waitingChats: [MChat] = [] // = Bundle.main.decode([MChat].self, from: "waitingChats.json")
+    let activeChats: [MChat] = [] 
+    let waitingChats: [MChat] = []
     lazy var collectionView = UICollectionView()
     
     enum Section: Int, CaseIterable {
